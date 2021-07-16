@@ -1,0 +1,59 @@
+body{
+    background-color: lightblue;
+    text-align: center;
+    
+}
+
+
+main{
+    
+    
+
+}
+
+#data-entry{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px;
+}
+
+
+button{
+    margin: 15px 5px;
+    font-size: 20px;
+}
+
+#data-container{
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    align-items:center;
+
+    font-size: 10px;
+}
+
+#temp{
+    font-size: 8em;
+}
+
+#city{
+    font-size: 2em;
+}
+
+#conditions{
+    font-size: 4em;
+}
+#range{
+    display: flex; 
+    flex-direction: row;
+    justify-content:space-around;
+    font-size: 3em;
+
+}
+
+.min-max{
+    margin: 15px;
+}
+
