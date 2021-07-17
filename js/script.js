@@ -1,24 +1,14 @@
 // CACHED DOM ELEMENTS
-const button = document.querySelector("button");
-const zipCode = document.querySelector("input");
-const dataContainer = document.getElementById("data-container");
+const button = document.querySelector("#submit");
+const userInput = document.querySelector("#user-input");
+const weatherContainer = document.querySelector("#weather-container");
 
 //  GLOBAL VARIABLES
 const WEATHER_ENDPOINT_FRONT = "https://api.openweathermap.org/data/2.5/weather?zip=";
 const WEATHER_ENDPOINT_BACK = ",us&units=imperial&appid=fdca18ceb5aeb5e5c9afe8bb1741de64";
-//const CLE_FULL = "https://api.openweathermap.org/data/2.5/weather?zip=44118,us&units=imperial&appid=fdca18ceb5aeb5e5c9afe8bb1741de64";
+const CLE_FULL = "https://api.openweathermap.org/data/2.5/weather?zip=44118,us&units=imperial&appid=fdca18ceb5aeb5e5c9afe8bb1741de64";
 
-const addInfoToDom = (weatherData) => {
-    const weatherDivs = userData.map((user, i )=> {
-        return `<div>
-            User number ${i} is named ${user.name}
-            <p>Email: ${user.email}</p>
-            <p>City: ${user.address.city}</p>
-            <p class = "company">Company: ${user.company.name}</p>
-        </div>`
-    });
-    usersContainer.innerHTML = userDivs.join("");
-}
+
 
 const addCityToDom = (cityName) => {
 
@@ -27,7 +17,7 @@ const addCityToDom = (cityName) => {
     cityDiv.id = "city";
     cityDiv.innerText = cityName;
 
-    dataContainer.appendChild(cityDiv);
+    weatherContainer.appendChild(cityDiv);
 }
 
 const addTempToDom = (temp) => {
@@ -37,7 +27,7 @@ const addTempToDom = (temp) => {
     tempDiv.id = "temp";
     tempDiv.innerText = temp + "°";
 
-    dataContainer.appendChild(tempDiv);
+    weatherContainer.appendChild(tempDiv);
 }
 
 const addConditionsToDom = (conditions) => {
@@ -47,7 +37,7 @@ const addConditionsToDom = (conditions) => {
     conditionsDiv.id = "conditions";
     conditionsDiv.innerText = conditions;
 
-    dataContainer.appendChild(conditionsDiv);
+    weatherContainer.appendChild(conditionsDiv);
 }
 
 const addRangeToDom = (min, max) => {
@@ -68,14 +58,28 @@ const addRangeToDom = (min, max) => {
     rangeDiv.appendChild(minDiv);
     rangeDiv.appendChild(maxDiv);
 
-    dataContainer.appendChild(rangeDiv);
+    weatherContainer.appendChild(rangeDiv);
 }
 
-const getWeatherData = async (cityURL) => {
-     try {
-        const response = await fetch(cityURL);// wait until next piece resolves. 
+
+
+const getWeatherReport = async () => {
+    const zipCode = getZipCode();
+    const zipURL = WEATHER_ENDPOINT_FRONT + zipCode + WEATHER_ENDPOINT_BACK;
+    
+    try {
+        
+        /* GET DATA FROM THE API */
+        const response = await fetch(zipURL);// wait until next piece resolves. 
         const data = await response.json(); // await allows this to run 
-        return data;
+        console.log (data);
+
+        /* ADD INFO TO WEBPAGE */
+        addCityToDom(data.name);
+        addTempToDom(data.main.temp.toFixed(0));
+        addConditionsToDom (data.weather[0].main);
+        addRangeToDom (data.main.temp_min.toFixed(0), data.main.temp_max.toFixed(0));
+ 
         //addUsersToDom(data);
      }catch (err){ // error being caught by browser
         console.log (err);
@@ -83,36 +87,9 @@ const getWeatherData = async (cityURL) => {
 }
 
 const getZipCode = () => {
-    return zipCode.value; // HERE
+    return userInput.value; // HERE
 }
 
-const getWeatherReport = () => {
-
-    let zip = getZipCode();
-    let cityURL = WEATHER_ENDPOINT_FRONT + zip + WEATHER_ENDPOINT_BACK;
-   // console.log(cityURL);
-    const weatherData = getWeatherData (cityURL);
-    console.log(weatherData);
-    /* Here's where I am stuck.
-    I don't know how to parse through this giant blob of data and extract
-    the correct values.
-    */
-    const city = "Phoenix";//`${weatherData.name}`;
-    addCityToDom(city);
-
-    const temp = 99;
-    addTempToDom(temp);
-
-    const conditions = "sunny";
-    addConditionsToDom (conditions);
-
-    const high = 100;
-    const low = 80;
-    addRangeToDom (low, high);
-
-
-
-}
 
 // EVENT LISTENERS
 button.addEventListener('click', getWeatherReport);
